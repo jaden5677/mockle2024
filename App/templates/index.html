@@ -63,29 +63,58 @@
 
     <div class="row">
 
-      <section class="col s12 m9" style="margin-top: 5px; overflow-y:scroll; height: 86vh">
-      
+      <section class="col s12 m9" style="margin-top: 5px; overflow-y: scroll; height: 86vh">
+        <div class="row">
+          {% for book in books %}
+          <div class="col s12 m3">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">{{ book.title }}</span>
+                <p><strong>{{ book.author }}</strong><br>{{ book.publisher }}</p>
+                <div>
+                  {% set avg_rating = book.reviews | map(attribute='rating') | list %}
+                  {% set avg = (avg_rating | sum / avg_rating|length) if avg_rating else 0 %}
+                  {% for i in range(5) %}
+                    <i class="material-icons star {% if i < avg %}filled{% endif %}">star</i>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="card-action">
+                <form method="get" action="{{ url_for('index') }}">
+                  <input type="hidden" name="isbn" value="{{ book.isbn }}">
+                  <button class="btn-small purple" type="submit">Review</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </section>
 
       <section class="col s12 m3">
+        <p>
+        {% if book %}
+          <h5>{{ book.title }} - {{ book.isbn }}</h5>
+          <form method="post" action="{{ url_for('add_review') }}">
+            <div class="input-field">
+              <textarea class="materialize-textarea" name="text" required placeholder="Write your review here"></textarea>
+            </div>
+            <p>Rating:</p>
+            {% for i in range(1, 6) %}
+              <label>
+                <input name="rating" type="radio" value="{{ i }}" required />
+                <span>{{ i }} Star{% if i > 1 %}s{% endif %}</span>
+              </label><br>
+            {% endfor %}
+            <input type="hidden" name="isbn" value="{{ book.isbn }}">
+            <br>
+            <button class="btn-small green" type="submit">Submit</button>
+          </form>
+        {% else %}
+          <h1>Select a Book to view/add reviews</h1>
+        {% endif %}
+        </p>
 
-          <p>
-            <!-- if a book was selected  -->
-            {% if book %}
-              <!-- display book details and review form -->
-
-                
-            {% else %}
-              <!-- if no book was selected, default state-->
-              <h1>Select a Book to view/add reviews</h1>
-            {% endif %}
-          </p>
-
-          <div class="row" style="height: 44vh; overflow-y: scroll">
-              
-          </div>
-      
-      </section>
 
     </div>
 

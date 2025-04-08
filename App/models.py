@@ -28,18 +28,18 @@ class Book(db.Model):
   publisher = db.Column(db.String(50), nullable=False)
   reviews = db.relationship('Review', backref='book', lazy=True)
 
-  def __init__(self, isbn, title, author, publisher, reviews):
+  def __init__(self, isbn, title, author, publisher):
     self.isbn = isbn
     self.title = title
     self.author = author
     self.publisher = publisher
-    self.reviews = reviews
   def __repr__(self):
     return f'<Book {self.title}>'
 
   def create_review(self, user_id, text, rating):
     review = Review(user_id=user_id, isbn=self.isbn, text=text, rating=rating)
     db.session.add(review)
+    db.session.commit()
 
 
   

@@ -141,5 +141,12 @@ def logout():
   return response
 
 
+@app.route('/app/<isbn>', method = ['GET'])
+@jwt_required()
+def book(isbn):
+  book = Book.query.get(isbn)
+  reviews = Review.query.filter_by(isbn=isbn).all()
+  return render_template('book.html', book=book, reviews=reviews, user=current_user)
+
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)
