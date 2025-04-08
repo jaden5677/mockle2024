@@ -107,6 +107,7 @@ def initialize_db():
 
 @app.route('/')
 def login():
+  initialize_db()
   return render_template('login.html')
 
 
