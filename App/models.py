@@ -7,7 +7,7 @@ class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(80), unique=True, nullable=False)
   password = db.Column(db.String(120), nullable=False)
-  reviews = db.relationship('Review', backref='user', lazy=True)
+  reviews = db.relationship('Review', back_populates='user', lazy=True)
 
   def __init__(self, username, password):
     self.username= username
@@ -26,7 +26,7 @@ class Book(db.Model):
   title = db.Column(db.String(100), nullable=False)
   author = db.Column(db.String(50), nullable=False)
   publisher = db.Column(db.String(50), nullable=False)
-  reviews = db.relationship('Review', backref='book', lazy=True)
+  reviews = db.relationship('Review', back_populates='book', lazy=True)
   publication_year = db.Column(db.Integer, nullable=False)
   image = db.Column(db.String(200), nullable=False)
 
@@ -56,8 +56,8 @@ class Review(db.Model):
   text = db.Column(db.String(500), nullable=False)
   rating = db.Column(db.Integer, nullable=False)
 
-  user = db.relationship('User', backref='reviews')
-  book = db.relationship('Book', backref='reviews')
+  user = db.relationship('User', back_populates='reviews')
+  book = db.relationship('Book', back_populates='reviews')
 
   def __init__(self, user_id, isbn, text, rating):
     if not 1 <= rating <= 5:

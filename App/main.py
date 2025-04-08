@@ -141,12 +141,21 @@ def logout():
   return response
 
 
-@app.route('/app/<isbn>')
+@app.route('/app/<isbn>', methods = ['GET'])
 @jwt_required()
 def book(isbn):
   book = Book.query.get(isbn)
   reviews = Review.query.filter_by(isbn=isbn).all()
-  return render_template('book.html', book=book, reviews=reviews, user=current_user)
+  return render_template('index.html', book=book, reviews=reviews, user=current_user)
+
+@app.route('/app/<isbn>/review', methods=['POST'])
+@jwt_required()
+def add_review(isbn):
+  text = request.form.get('text')
+  rating = request.form.get('rating')
+  book = Book.query.get(isbn)
+  review = book.create_review(current_user.id, text, rating)
+  return redirect(url_for('book', isbn=isbn))
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)
