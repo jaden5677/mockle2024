@@ -146,10 +146,11 @@ def logout():
 @jwt_required()
 def book(isbn):
   book = Book.query.get(isbn)
+  books = Book.query.all()
   reviews = Review.query.filter_by(isbn=isbn).all()
-  return render_template('index.html', book=book, reviews=reviews, user=current_user)
+  return render_template('index.html', books = books, book=book, reviews=reviews, user=current_user)
 
-@app.route('/app/<isbn>/review', methods=['POST'])
+@app.route('/app/<isbn>', methods=['POST'])
 @jwt_required()
 def add_review(isbn):
   text = request.form.get('text')

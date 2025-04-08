@@ -85,28 +85,45 @@
 
 
       <section class="col s12 m3">
-        <p>
         {% if book %}
-          <h5>{{ book.title }} - {{ book.isbn }}</h5>
-          <form method="post" action="{{ url_for('add_review') }}">
+          <div>
+            <img src="{{ book.image }}" alt="Book Cover" class="book-image">
+
+            <h5>{{ book.title }}</h5>
+            <p><strong>Author:</strong> {{ book.author }}</p>
+            <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+            <p><strong>Published:</strong> {{ book.publication_year }}</p>
+          </div>
+
+          <div class="divider"></div>
+
+          <form method="post" action="{{ url_for('book', isbn=book.isbn) }}">
             <div class="input-field">
-              <textarea class="materialize-textarea" name="text" required placeholder="Write your review here"></textarea>
+              <textarea id="text" name="text" class="materialize-textarea" required></textarea>
+              <label for="text">Your review</label>
             </div>
-            <p>Rating:</p>
-            {% for i in range(1, 6) %}
-              <label>
-                <input name="rating" type="radio" value="{{ i }}" required />
-                <span>{{ i }} Star{% if i > 1 %}s{% endif %}</span>
-              </label><br>
-            {% endfor %}
-            <input type="hidden" name="isbn" value="{{ book.isbn }}">
-            <br>
-            <button class="btn-small green" type="submit">Submit</button>
+            <div class="input-field">
+              <input id="rating" name="rating" type="number" min="1" max="5" required>
+              <label for="rating">Rating (1–5)</label>
+            </div>
+            <button class="btn purple waves-effect waves-light" type="submit">Submit Review</button>
           </form>
+          <div class="divider"></div>
+          <h5>Reviews</h5>
+          {% for review in reviews %}
+            <div class="card-panel">
+              <p><strong>{{ review.username }}</strong> ({{ review.rating }}/5)</p>
+              <p>{{ review.text }}</p>
+            </div>
+          {% endfor %}
+          {% if not reviews %}
+            <p>No reviews yet.</p>
+          {% endif %}
+      </section>
         {% else %}
           <h1>Select a Book to view/add reviews</h1>
         {% endif %}
-        </p>
+        
 
 
     </div>
