@@ -27,12 +27,17 @@ class Book(db.Model):
   author = db.Column(db.String(50), nullable=False)
   publisher = db.Column(db.String(50), nullable=False)
   reviews = db.relationship('Review', backref='book', lazy=True)
+  publication_year = db.Column(db.Integer, nullable=False)
+  image = db.Column(db.String(200), nullable=False)
 
-  def __init__(self, isbn, title, author, publisher):
+  def __init__(self, isbn, title, author, publisher, publication_year, image):
     self.isbn = isbn
     self.title = title
     self.author = author
     self.publisher = publisher
+    self.publication_year = publication_year
+    self.image = image
+    
   def __repr__(self):
     return f'<Book {self.title}>'
 
@@ -50,6 +55,9 @@ class Review(db.Model):
   isbn = db.Column(db.String, db.ForeignKey('book.isbn'), nullable=False)
   text = db.Column(db.String(500), nullable=False)
   rating = db.Column(db.Integer, nullable=False)
+
+  user = db.relationship('User', backref='reviews')
+  book = db.relationship('Book', backref='reviews')
 
   def __init__(self, user_id, isbn, text, rating):
     if not 1 <= rating <= 5:

@@ -100,8 +100,8 @@ def initialize_db():
   db.drop_all()
   db.create_all()
   create_users()
-  # parse_books()
-  # parse_reviews()
+  parse_books()
+  parse_reviews()
   print('database intialized')
 
 
@@ -141,7 +141,7 @@ def logout():
   return response
 
 
-@app.route('/app/<isbn>', method = ['GET'])
+@app.route('/app/<isbn>')
 @jwt_required()
 def book(isbn):
   book = Book.query.get(isbn)
