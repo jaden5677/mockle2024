@@ -40,6 +40,7 @@ class Book(db.Model):
     review = Review(user_id=user_id, isbn=self.isbn, text=text, rating=rating)
     db.session.add(review)
     db.session.commit()
+    return review
 
 
   
@@ -51,7 +52,12 @@ class Review(db.Model):
   rating = db.Column(db.Integer, nullable=False)
 
   def __init__(self, user_id, isbn, text, rating):
+    if not 1 <= rating <= 5:
+      raise ValueError("Rating must be between 1 and 5")
     self.user_id = user_id
     self.isbn = isbn
     self.text = text
     self.rating = rating
+    
+  def __repr__(self):
+    return f'<Review {self.id} rating={self.rating}>'
